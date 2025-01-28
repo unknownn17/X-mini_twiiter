@@ -27,7 +27,7 @@ jobs:
           key: ${{ env.SSH_PRIVATE_KEY }}
           script: |
             if [ ! -d "twitter/mini/" ]; then
-              git clone https://github.com/unknownn17/X-mini_twiiter-.git
+              git clone https://github.com/unknownn17/X-mini_twiiter-
             fi
             cd twitter/mini/
             git pull origin unknown17
