@@ -1,0 +1,86 @@
+syntax = "proto3";
+
+option go_package = "./user17";
+
+message SignUp{
+    string username=1;
+    string password=2;
+    string email=3;
+}
+
+message Verify{
+    string code=1;
+    string email=2;
+}
+
+message SignIn{
+    string password=1;
+    string email=2;
+}
+
+message LogOut_delete{
+    string username=1;
+}
+
+message Respond{
+    string message=1;
+}
+
+message GET_UserProfile_Request{
+    string username=1;
+}
+
+message Followers{
+    string username=1;
+}
+
+message Following{
+    string username=1;
+    string your_username=2;
+}
+
+message GetFollowing{
+    repeated Following following=1;
+}
+
+message GetFollowers{
+    repeated Following followers=1;
+}
+
+
+message GET_UserProfile_Response{
+    string username=1;
+    string email=2;
+    int32 followers=3;
+    int32 following=4;
+    int32 age=5;
+    string bio=6;
+    string gender=7;
+    int32 tweets=8;
+    string id=9;
+}
+
+message PUT_userProfile{
+    string username=1;
+    string email=2;
+    int32 age=3;
+    string bio=4;
+    string gender=5;
+    string password=6;
+    string id=7;
+}
+
+service User{
+    rpc Signup(SignUp) returns (Respond);
+    rpc VErify(Verify) returns (Respond);
+    rpc Signin(SignIn) returns (Respond);
+    rpc LogOut(LogOut_delete) returns (Respond);
+    rpc User_Profile(GET_UserProfile_Request) returns (GET_UserProfile_Response);
+    rpc Update_Profile(PUT_userProfile) returns (GET_UserProfile_Response);
+    rpc Delete_Profile (LogOut_delete) returns (Respond);
+    rpc Follow(Following)returns(Respond);
+    rpc Get_Followers(Followers)returns(GetFollowers);
+    rpc Get_Following(Followers)returns(GetFollowing);
+    rpc Search(Following)returns(GET_UserProfile_Response);
+    rpc Unfollow(Following)returns(Respond);
+}

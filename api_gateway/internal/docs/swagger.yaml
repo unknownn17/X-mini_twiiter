@@ -1,0 +1,679 @@
+definitions:
+  models.CommentedUsers:
+    properties:
+      comment:
+        type: string
+      username:
+        type: string
+    type: object
+  models.CreateTweetRequest:
+    properties:
+      body:
+        type: string
+      title:
+        type: string
+    type: object
+  models.CreateTweetResponse:
+    properties:
+      body:
+        type: string
+      id:
+        type: integer
+      title:
+        type: string
+      username:
+        type: string
+    type: object
+  models.Followers:
+    type: object
+  models.Following:
+    properties:
+      username:
+        type: string
+    type: object
+  models.GetUserProfileResponse:
+    properties:
+      age:
+        type: integer
+      bio:
+        type: string
+      email:
+        type: string
+      gender:
+        type: string
+      username:
+        type: string
+    type: object
+  models.LikeCommentRetweet:
+    properties:
+      comment:
+        type: string
+      like:
+        type: boolean
+      retweet:
+        type: boolean
+      tweet_id:
+        type: integer
+      tweeted_user:
+        type: string
+    type: object
+  models.PutUserProfile:
+    properties:
+      age:
+        type: integer
+      bio:
+        type: string
+      email:
+        type: string
+      gender:
+        type: string
+      password:
+        type: string
+      username:
+        type: string
+    type: object
+  models.Respond:
+    properties:
+      message:
+        type: string
+    type: object
+  models.SignIn:
+    properties:
+      email:
+        type: string
+      password:
+        type: string
+    type: object
+  models.SignUp:
+    properties:
+      email:
+        type: string
+      password:
+        type: string
+      username:
+        type: string
+    type: object
+  models.UpdateTweet:
+    properties:
+      body:
+        type: string
+      title:
+        type: string
+    type: object
+  models.UsersLiked:
+    properties:
+      username:
+        type: string
+    type: object
+  models.Verify:
+    properties:
+      code:
+        type: string
+      email:
+        type: string
+    type: object
+info:
+  contact: {}
+  description: This is a sample server for a Tender system.
+  title: Tender API
+  version: "1.0"
+paths:
+  /user/delete:
+    delete:
+      consumes:
+      - application/json
+      description: Delete the account of the logged-in user
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.Respond'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/models.Respond'
+      security:
+      - Bearer: []
+      summary: Delete User Account
+      tags:
+      - User
+  /user/follow:
+    post:
+      consumes:
+      - application/json
+      description: Follow another user
+      parameters:
+      - description: Follow User
+        in: body
+        name: follow
+        required: true
+        schema:
+          $ref: '#/definitions/models.Following'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.Respond'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/models.Respond'
+      security:
+      - Bearer: []
+      summary: Follow User
+      tags:
+      - Followers
+  /user/followers:
+    get:
+      consumes:
+      - application/json
+      description: Get the list of followers of the logged-in user
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.Followers'
+            type: array
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/models.Respond'
+      security:
+      - Bearer: []
+      summary: Get Followers
+      tags:
+      - Followers
+  /user/following:
+    get:
+      consumes:
+      - application/json
+      description: Get the list of followings of the logged-in user
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.Followers'
+            type: array
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/models.Respond'
+      security:
+      - Bearer: []
+      summary: Get Followings
+      tags:
+      - Followings
+  /user/logout:
+    delete:
+      consumes:
+      - application/json
+      description: Delete the account of the logged-in user
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.Respond'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/models.Respond'
+      security:
+      - Bearer: []
+      summary: Delete User Account
+      tags:
+      - User
+  /user/profile:
+    get:
+      consumes:
+      - application/json
+      description: Retrieve the profile of the logged-in user
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.GetUserProfileResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/models.Respond'
+      security:
+      - Bearer: []
+      summary: Get User Profile
+      tags:
+      - User
+  /user/search/{searching_user}:
+    get:
+      consumes:
+      - application/json
+      description: Search for a user by username
+      parameters:
+      - description: Username to search
+        in: path
+        name: s_user
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.GetUserProfileResponse'
+            type: array
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/models.Respond'
+      security:
+      - Bearer: []
+      summary: Search User
+      tags:
+      - User
+  /user/tweets:
+    get:
+      consumes:
+      - application/json
+      description: Get all tweets of the logged-in user
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.CreateTweetResponse'
+            type: array
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/models.Respond'
+      security:
+      - Bearer: []
+      summary: Get All Tweets
+      tags:
+      - Tweets
+  /user/tweets/{id}:
+    delete:
+      consumes:
+      - application/json
+      description: Delete a tweet by ID
+      parameters:
+      - description: Tweet ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.Respond'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/models.Respond'
+      security:
+      - Bearer: []
+      summary: Delete Tweet
+      tags:
+      - Tweets
+    get:
+      consumes:
+      - application/json
+      description: Get a specific tweet by ID
+      parameters:
+      - description: Tweet ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.CreateTweetResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/models.Respond'
+      security:
+      - Bearer: []
+      summary: Get Tweet
+      tags:
+      - Tweets
+  /user/tweets/comments/{id}:
+    get:
+      consumes:
+      - application/json
+      description: Get the list of users who liked a specific tweet
+      parameters:
+      - description: Tweet ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.CommentedUsers'
+            type: array
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/models.Respond'
+      security:
+      - Bearer: []
+      summary: Get Liked Users
+      tags:
+      - Tweets
+  /user/tweets/create:
+    post:
+      consumes:
+      - application/json
+      description: Create a new tweet
+      parameters:
+      - description: Create Tweet
+        in: body
+        name: tweet
+        required: true
+        schema:
+          $ref: '#/definitions/models.CreateTweetRequest'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/models.CreateTweetResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/models.Respond'
+      security:
+      - Bearer: []
+      summary: Create Tweet
+      tags:
+      - Tweets
+  /user/tweets/likes/{id}:
+    get:
+      consumes:
+      - application/json
+      description: Get the list of users who liked a specific tweet
+      parameters:
+      - description: Tweet ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.UsersLiked'
+            type: array
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/models.Respond'
+      security:
+      - Bearer: []
+      summary: Get Liked Users
+      tags:
+      - Tweets
+  /user/tweets/lrc:
+    post:
+      consumes:
+      - application/json
+      description: Like, comment, or retweet a tweet
+      parameters:
+      - description: Like, Comment, or Retweet
+        in: body
+        name: action
+        required: true
+        schema:
+          $ref: '#/definitions/models.LikeCommentRetweet'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.Respond'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/models.Respond'
+      security:
+      - Bearer: []
+      summary: Like, Comment, or Retweet
+      tags:
+      - Tweets
+  /user/tweets/retweets/{id}:
+    get:
+      consumes:
+      - application/json
+      description: Get the list of users who liked a specific tweet
+      parameters:
+      - description: Tweet ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.UsersLiked'
+            type: array
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/models.Respond'
+      security:
+      - Bearer: []
+      summary: Get Liked Users
+      tags:
+      - Tweets
+  /user/tweets/update/{id}:
+    put:
+      consumes:
+      - application/json
+      description: Update a tweet by ID
+      parameters:
+      - description: Tweet ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: Update Tweet
+        in: body
+        name: tweet
+        required: true
+        schema:
+          $ref: '#/definitions/models.UpdateTweet'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.Respond'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/models.Respond'
+      security:
+      - Bearer: []
+      summary: Update Tweet
+      tags:
+      - Tweets
+  /user/unfollow:
+    post:
+      consumes:
+      - application/json
+      description: Unfollow a user
+      parameters:
+      - description: Unfollow User
+        in: body
+        name: unfollow
+        required: true
+        schema:
+          $ref: '#/definitions/models.Following'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.Respond'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/models.Respond'
+      security:
+      - Bearer: []
+      summary: Unfollow User
+      tags:
+      - Followers
+  /user/update:
+    put:
+      consumes:
+      - application/json
+      description: Update the profile of the logged-in user
+      parameters:
+      - description: Update Profile
+        in: body
+        name: profile
+        required: true
+        schema:
+          $ref: '#/definitions/models.PutUserProfile'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.Respond'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/models.Respond'
+      security:
+      - Bearer: []
+      summary: Update User Profile
+      tags:
+      - User
+  /users/login:
+    post:
+      consumes:
+      - application/json
+      description: Login a user and provide a JWT token
+      parameters:
+      - description: Login
+        in: body
+        name: login
+        required: true
+        schema:
+          $ref: '#/definitions/models.SignIn'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.Respond'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/models.Respond'
+      summary: User Login
+      tags:
+      - Authentication
+  /users/register:
+    post:
+      consumes:
+      - application/json
+      description: Registers a new user
+      parameters:
+      - description: SignUp
+        in: body
+        name: signup
+        required: true
+        schema:
+          $ref: '#/definitions/models.SignUp'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/models.Respond'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/models.Respond'
+      summary: User SignUp
+      tags:
+      - Authentication
+  /users/verify:
+    post:
+      consumes:
+      - application/json
+      description: Verify user email with a provided token
+      parameters:
+      - description: Verify
+        in: body
+        name: verify
+        required: true
+        schema:
+          $ref: '#/definitions/models.Verify'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.Respond'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/models.Respond'
+      summary: Verify user email
+      tags:
+      - Authentication
+securityDefinitions:
+  Bearer:
+    description: Enter the token in the format `Bearer {token}`
+    in: header
+    name: Authorization
+    type: apiKey
+swagger: "2.0"

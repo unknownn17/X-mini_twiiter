@@ -1,0 +1,49 @@
+syntax = "proto3";
+
+option go_package = "./tweets17";
+
+
+message CreateTweetRequest{
+    string username=1;
+    string title=2;
+    string body=3;
+}
+
+message CreateTweetResponse{
+    int32 id=1;
+    string username=2;
+    string title=3;
+    string body=4;
+}
+
+message GetTweet{
+    int32 id=1;
+    string username=2;
+}
+
+message GetAlltweets{
+    string username=1;
+}
+
+message UpdateTweet{
+    int32 id=1;
+    string username=2;
+    string title=3;
+    string body=4;
+}
+
+message Respond1{
+    string message=1;
+}
+message GetAll{
+    repeated CreateTweetResponse tweets=1;
+}
+
+
+service Tweets{
+    rpc CreateTweet (CreateTweetRequest) returns (CreateTweetResponse);
+    rpc GetTweet1 (GetTweet) returns (CreateTweetResponse);
+    rpc Update (UpdateTweet) returns (CreateTweetResponse);
+    rpc Delete (GetTweet) returns (Respond1);
+    rpc GetAllTweet (GetAlltweets) returns (GetAll);
+}

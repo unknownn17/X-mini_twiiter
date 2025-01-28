@@ -1,0 +1,16 @@
+CREATE  TABLE  IF NOT EXISTS users (
+    id VARCHAR(255) PRIMARY KEY,
+    username VARCHAR(255) NOT NULL UNIQUE,
+    password VARCHAR(255) NOT NULL,
+    email VARCHAR(255) NOT NULL UNIQUE,
+    age INT,
+    gender VARCHAR(50),
+    bio VARCHAR(255),
+    is_logout BOOLEAN DEFAULT FALSE
+);
+
+CREATE TABLE IF NOT EXISTS follow(
+   username VARCHAR(255) NOT NULL UNIQUE,
+   following VARCHAR(255),
+   followers VARCHAR(255)
+);

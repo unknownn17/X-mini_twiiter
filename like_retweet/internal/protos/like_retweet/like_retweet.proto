@@ -1,0 +1,52 @@
+syntax = "proto3";
+
+option go_package = "./like_retweet17";
+
+message Info{
+    int32 like_amount=1;
+    int32 retweet_amount=2;
+    int32 comments=3;
+}
+
+message Like_Comment_Retweet{
+    int32 tweet_id=1;
+    string tweeted_user=2;
+    string username=3;
+    string comment=4;
+    bool like=5;
+    bool retweet=6;
+}
+
+message Liked_Commented_users{
+    int32 tweet_id=1;
+    string tweeted_user=2;
+}
+
+message users_liked{
+    string username=1;
+}
+
+message Liked_user_Response{
+    repeated users_liked users=1;
+}
+
+message Commented_users{
+    string username=1;
+    string comment=2;
+}
+
+message Commented_users_Response{
+    repeated Commented_users user=1;
+}
+
+message Status{
+    string message=1;
+}
+
+service Like_Retweet_Comment{
+    rpc Information (Liked_Commented_users) returns (Info);
+    rpc LRC (Like_Comment_Retweet) returns (Status);
+    rpc LikedUsers (Liked_Commented_users) returns (Liked_user_Response);
+    rpc CommentedUsers (Liked_Commented_users) returns (Commented_users_Response);
+    rpc RetweetedUsers (Liked_Commented_users) returns (Liked_user_Response);
+}
