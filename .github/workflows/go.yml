@@ -1,3 +1,4 @@
+
 name: Build, Push and Deploy Docker Image
 
 on:
@@ -25,15 +26,12 @@ jobs:
           username: ${{ env.SERVER_USERNAME }}
           key: ${{ env.SSH_PRIVATE_KEY }}
           script: |
-            # Make sure we're in the right directory
-            if [ ! -d "twitter/mini/" ]; then
-              git clone https://github.com/unknownn17/X-mini_twiiter-
+            if [ ! -d "twitter/mini" ]; then
+              git clone https://github.com/unknownn17/X-mini_twiiter.git twitter/mini
             fi
             cd twitter/mini/
             git pull origin unknown17
-      
-            sudo systemctl start docker
-            sudo systemctl enable docker
-
             sudo docker compose down
             sudo docker compose up --build -d
+          script_stop: true
+          timeout: 200s
