@@ -1,4 +1,3 @@
-
 name: Build, Push and Deploy Docker Image
 
 on:
@@ -26,12 +25,37 @@ jobs:
           username: ${{ env.SERVER_USERNAME }}
           key: ${{ env.SSH_PRIVATE_KEY }}
           script: |
-            if [ ! -d "twitter/mini" ]; then
-              git clone https://github.com/unknownn17/X-mini_twiiter.git twitter/mini
+            # Ensure we're in the correct directory
+            if [ ! -d "twitter/mini/.git" ]; then
+              echo "Cloning repository..."
+              git clone https://github.com/unknownn17/X-mini_twiiter- twitter/mini
             fi
-            cd twitter/mini/
+            cd twitter/mini
+            
+            # Check if it's a valid git repository
+            if [ ! -d ".git" ]; then
+              echo "Not a valid git repository. Exiting."
+              exit 1
+            fi
+            
+            # Pull the latest code
             git pull origin unknown17
-            sudo docker compose down
-            sudo docker compose up --build -d
-          script_stop: true
+            
+            # Ensure Docker is started and running
+            sudo systemctl start docker
+            sudo systemctl enable docker
+            
+            # Verify Docker is running
+            sudo docker --version
+            sudo docker ps
+            
+            # Check if docker-compose.yml exists
+            if [ ! -f "docker-compose.yml" ]; then
+              echo "docker-compose.yml not found. Exiting."
+              exit 1
+            fi
+            
+            # Run Docker Compose commands
+            sudo docker-compose down
+            sudo docker-compose up --build -d
           timeout: 200s
