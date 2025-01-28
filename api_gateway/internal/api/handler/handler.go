@@ -21,7 +21,7 @@ type Handler struct {
 // @in header
 // @name Authorization
 // @description Enter the token in the format `Bearer {token}`
-// @host 54.93.169.32:7777
+// @host localhost:7777
 // @BasePath /
 
 
